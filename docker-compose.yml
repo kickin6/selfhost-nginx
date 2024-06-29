@@ -8,13 +8,10 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./sites-available:/etc/nginx/sites-available
-      - ./sites-enabled:/etc/nginx/sites-enabled
-      - ./conf.d:/etc/nginx/conf.d
     env_file:
       - .env
+    environment:
+      - PROFILE=${PROFILE}
     networks:
       - app-network
 
