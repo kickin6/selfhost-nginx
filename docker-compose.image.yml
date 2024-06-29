@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  selfhost-image:
+    build:
+      context: ../selfhost-image
+    container_name: selfhost-image
+    ports:
+      - "${IMAGE_PORT:-5002}:${IMAGE_PORT:-5002}"
+    volumes:
+      - ../selfhost-image/cache:/app/cache
+      - ../selfhost-image/outputs:/app/outputs
+    env_file:
+      - .env
+    networks:
+      - app-network

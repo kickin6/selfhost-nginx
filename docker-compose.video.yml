@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  selfhost-video:
+    build:
+      context: ../selfhost-video
+    container_name: selfhost-video
+    ports:
+      - "${VIDEO_PORT}:${VIDEO_PORT}"
+    volumes:
+      - ../selfhost-video/cache:/app/cache
+      - ../selfhost-video/outputs:/app/outputs
+    networks:
+      - app-network
+
+  celery_worker:
+    build:
+      context: ../selfhost-video
+    container_name: celery_worker
+    command: celery -A app.celery_app worker --loglevel=${CELERY_LOG_LEVEL}
+    volumes:
+      - ../selfhost-video/cache:/app/cache
+      - ../selfhost-video/outputs:/app/outputs
+    networks:
+      - app-network

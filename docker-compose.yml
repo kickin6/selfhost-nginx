@@ -1,63 +1,6 @@
-version: "3.8"
+version: "3.9"
 
 services:
-  selfhost-video:
-    build:
-      context: ../selfhost-video
-    container_name: selfhost-video
-    ports:
-      - "5003:5003"
-    volumes:
-      - ../selfhost-video/cache:/app/cache
-      - ../selfhost-video/movies:/app/movies
-    environment:
-      - FLASK_APP=app.run
-      - PUBLIC_PORT=${MOVIES_PUBLIC_PORT}
-      - CACHE_DIR=cache
-      - MOVIES_DIR=movies
-      - DEFAULT_ZOOM=0.002
-      - SCHEME=https
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
-      - CELERY_LOG_LEVEL=INFO
-      - PYTHONPATH=/app
-    networks:
-      - app-network
-
-  celery-worker:
-    build:
-      context: ../selfhost-video
-    container_name: celery-worker
-    command: celery -A app.celery_app worker --loglevel=info
-    volumes:
-      - ../selfhost-video/cache:/app/cache
-      - ../selfhost-video/movies:/app/movies
-      - ./test_redis_connection.py:/app/test_redis_connection.py
-    environment:
-      - FLASK_APP=app.run
-      - PUBLIC_PORT=${MOVIES_PUBLIC_PORT}
-      - CACHE_DIR=cache
-      - MOVIES_DIR=movies
-      - DEFAULT_ZOOM=0.002
-      - SCHEME=https
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
-      - CELERY_LOG_LEVEL=INFO
-      - PYTHONPATH=/app
-    networks:
-      - app-network
-
-  redis:
-    build:
-      context: ../selfhost-video/redis
-      dockerfile: Dockerfile.redis
-    container_name: redis
-    ports:
-      - "6379:6379"
-    networks:
-      - app-network
-    privileged: true
-
   nginx:
     build:
       context: .
@@ -65,20 +8,15 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "8443:8443"
-      - "9443:9443"
-      - "10443:10443"
-      - "11443:11443"
-      - "12443:12443"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-      - ../selfhost-video/movies:/app/movies
+      - ./sites-available:/etc/nginx/sites-available
+      - ./sites-enabled:/etc/nginx/sites-enabled
+      - ./conf.d:/etc/nginx/conf.d
+    env_file:
+      - .env
     networks:
       - app-network
-    depends_on:
-      - selfhost-video
-      - redis
-      - celery-worker
 
 networks:
   app-network:

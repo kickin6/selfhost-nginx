@@ -1,9 +1,8 @@
-# Use the official Nginx image from the Docker Hub
-FROM nginx:latest
+FROM nginx:alpine
 
-# Copy the custom Nginx configuration file to the appropriate directory in the container
 COPY nginx.conf /etc/nginx/nginx.conf
+COPY sites-available /etc/nginx/sites-available
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# (Optional) Copy SSL certificates if you're using SSL
-COPY ssl/cert.pem /etc/nginx/ssl/cert.pem
-COPY ssl/key.pem /etc/nginx/ssl/key.pem
+ENTRYPOINT ["/entrypoint.sh"]

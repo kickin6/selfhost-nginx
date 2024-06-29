@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  selfhost-llm:
+    build:
+      context: ../selfhost-llm
+    container_name: selfhost-llm
+    ports:
+      - "${LLM_PORT:-5005}:${LLM_PORT:-5005}"
+    volumes:
+      - ../selfhost-llm/cache:/app/cache
+      - ../selfhost-llm/outputs:/app/outputs
+    env_file:
+      - .env
+    networks:
+      - app-network
