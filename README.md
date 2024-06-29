@@ -1,1 +1,1 @@
-# selfhost-nginx
+# nginx
