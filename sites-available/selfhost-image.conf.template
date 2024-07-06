@@ -4,7 +4,10 @@ server {
     ssl_certificate ${SSL_CERTIFICATE};
     ssl_certificate_key ${SSL_CERTIFICATE_KEY};
 
-    location /api/image {
+    location /image/ {
+        # Allow only specific IPs
+        include /etc/nginx/allow_ips.conf;
+
         proxy_pass ${UPSTREAM_IMAGE};
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -12,9 +15,13 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
     }
 
-    location /api/image/outputs/ {
-        alias /app/outputs/;
+    location /image/files {
+        # Allow only specific IPs
+        include /etc/nginx/allow_ips.conf;
+
+        alias /app/output/;
         autoindex on;
         try_files $uri $uri/ =404;
     }
 }
+

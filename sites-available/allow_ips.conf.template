@@ -1,0 +1,5 @@
+# Allow specific IP addresses
+${NGINX_ALLOW_IPS}
+# Deny all other IP addresses
+deny all;
+
