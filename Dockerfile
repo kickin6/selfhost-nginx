@@ -4,8 +4,5 @@ FROM nginx:latest
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY allowed_ips.conf /etc/nginx/allowed_ips.conf
 
-# Copy SSL certificates
-COPY ssl /etc/nginx/ssl
-
 CMD ["nginx", "-g", "daemon off;"]
 
