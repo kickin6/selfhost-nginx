@@ -1,9 +1,11 @@
-# Use the official Nginx image from the Docker Hub
 FROM nginx:latest
 
-# Copy the custom Nginx configuration file to the appropriate directory in the container
+# Copy custom configuration files from the current directory
 COPY nginx.conf /etc/nginx/nginx.conf
+COPY allowed_ips.conf /etc/nginx/allowed_ips.conf
 
-# (Optional) Copy SSL certificates if you're using SSL
-COPY ssl/cert.pem /etc/nginx/ssl/cert.pem
-COPY ssl/key.pem /etc/nginx/ssl/key.pem
+# Copy SSL certificates
+COPY ssl /etc/nginx/ssl
+
+CMD ["nginx", "-g", "daemon off;"]
+

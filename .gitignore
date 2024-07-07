@@ -18,6 +18,7 @@ ssl/
 # Docker related files
 *.log
 .dockerignore
+run.sh
 
 # System-specific files
 .DS_Store
