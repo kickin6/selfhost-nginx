@@ -8,13 +8,10 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    env_file:
-      - .env
-    environment:
-      - PROFILE=${PROFILE}
     networks:
       - app-network
 
 networks:
   app-network:
     driver: bridge
+
